@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Payment.Models.Payment.Account
 {
-    public class SpUserAccount
+    public sealed class SpUserAccount
     {
         [JsonProperty("id")]
         public string Id { get; set; }

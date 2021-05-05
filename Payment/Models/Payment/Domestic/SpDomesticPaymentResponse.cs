@@ -5,7 +5,7 @@ using Payment.Models.Payment.Account;
 
 namespace Payment.Models.Payment.Domestic
 {
-    public class SpDomesticPaymentResponse: SpDomesticPayment
+    public sealed class SpDomesticPaymentResponse: SpDomesticPayment
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
