@@ -41,7 +41,8 @@ namespace Payment.Client
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
-        public async Task<SpDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment)
+        public async Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> CreateDomesticPayment(
+            SpDomesticPayment payment)
         {
             using var client = GetClient();
             var response = await client.PostAsync(GetUrl(SpEndpoints.CreateDomesticPayment), GetBody(payment));
@@ -50,14 +51,13 @@ namespace Payment.Client
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
-            var model =
-                JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                    await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Formatting = Formatting.Indented
-                    });
-            return model!.Data;
+
+            return JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Payment.Client
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<SpDomesticPaymentResponse> GetDomesticPayment(string id)
+        public async Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> GetDomesticPayment(string id)
         {
             using var client = GetClient();
             var response = await client.GetAsync($"{GetUrl(SpEndpoints.GetDomesticPayment)}?id={id}");
@@ -74,14 +74,13 @@ namespace Payment.Client
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
-            var model =
-                JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                    await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Formatting = Formatting.Indented
-                    });
-            return model!.Data;
+
+            return JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
         }
 
         /// <summary>
@@ -90,7 +89,8 @@ namespace Payment.Client
         /// <param name="start"></param>
         /// <param name="perPage"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SpDomesticPaymentResponse>> ListDomesticPayments(int start = 0, int perPage = 100)
+        public async Task<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>> ListDomesticPayments(
+            int start = 0, int perPage = 100)
         {
             using var client = GetClient();
             var response =
@@ -100,14 +100,13 @@ namespace Payment.Client
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
-            var model =
-                JsonConvert.DeserializeObject<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
-                    await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Formatting = Formatting.Indented
-                    });
-            return model!.Data;
+
+            return JsonConvert.DeserializeObject<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
+                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                });
         }
 
         /// <summary>

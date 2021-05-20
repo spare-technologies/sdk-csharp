@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Payment.Models.Payment.Domestic;
+using Payment.Models.Response;
 
 namespace Payment.Client
 {
@@ -11,14 +12,14 @@ namespace Payment.Client
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
-        Task<SpDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment);
+        Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> CreateDomesticPayment(SpDomesticPayment payment);
 
         /// <summary>
         /// Get domestic payment
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<SpDomesticPaymentResponse> GetDomesticPayment(string id);
+        Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> GetDomesticPayment(string id);
 
         /// <summary>
         /// List domestic payments
@@ -26,6 +27,7 @@ namespace Payment.Client
         /// <param name="start"></param>
         /// <param name="perPage"></param>
         /// <returns></returns>
-        Task<IEnumerable<SpDomesticPaymentResponse>> ListDomesticPayments(int start = 0, int perPage = 100);
+        Task<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>> ListDomesticPayments(int start = 0,
+            int perPage = 100);
     }
 }
