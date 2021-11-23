@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Payment.Models.Response
 {
-    public class SpareSdkResponse<T,TV>
+    public class SpSpareSdkResponse<T,TV>
     {
         [JsonProperty("error")]
         public string Error { get; set; }

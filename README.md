@@ -28,21 +28,32 @@ public void ConfigureServices(IServiceCollection services)
 public class TestController : Controller
     {
         private readonly ISpPaymentClient _client_;
+
+        private readonly PrivateKey = "Your ecc private key";
+
+        private readonly ServerPublicKey = "Server ecc public key";
+
         public TestController(ISpPaymentClient client)
         {
             _client = client;
         }
         
         // GET
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var payment = await client.CreateDomesticPayment(new SpDomesticPayment
+             var payment = new SpDomesticPayment
             {
-                Amount = 10,
-                Description = "Payment from csharp sdk test",
-                FailUrl = new Uri("https://example.com"),
-                SuccessUrl = new Uri("https://example.com")
-            });
+                Amount = 10m,
+                Description = "Payment description"
+            };
+
+            var createPayment =  await _paymentClient.CreateDomesticPayment(payment,SpEccSignatureManager.Sign(payment, PrivateKey));
+
+           // To verify signature of the created payment 
+
+           if(SpEccSignatureManager.Verify(createPayment.PaymentResponse, createPayment.Signature, ServerPublicKey)){
+               // signature verified
+           }
         }
     }
 ```

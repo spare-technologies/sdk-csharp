@@ -10,7 +10,7 @@ namespace Payment.Enum.Payment
         [EnumMember(Value = "WEB")]
         Web = 1,
         
-        [EnumMember(Value = "SDK")]
-        Sdk = 2
+        [EnumMember(Value = "API")]
+        Api = 2
     }
 }

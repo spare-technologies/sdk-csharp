@@ -1,14 +1,13 @@
 using System;
 using System.IO;
 using System.Text;
-using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 
 namespace Security.DigitalSignature
 {
-    public static class EccSignatureManager
+    public static class SpEccSignatureManager
     {
         /// <summary>
         /// Sign payload
@@ -18,13 +17,7 @@ namespace Security.DigitalSignature
         /// <returns></returns>
         public static string Sign(object data, string privateKey)
         {
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-            };
-
-            var bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(data));
+            var bytes = data.GetJsonBytes();
 
             var sig = SignerUtilities.GetSigner("SHA-256withECDSA");
             var keyPair =
@@ -50,12 +43,8 @@ namespace Security.DigitalSignature
                 (ECPublicKeyParameters) new PemReader(new StringReader(publicKey)).ReadObject();
 
             sig.Init(false, keyPair);
-            var input = JsonConvert.SerializeObject(data, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-            });
-            var bytes = Encoding.ASCII.GetBytes(input);
+
+            var bytes = data.GetJsonBytes();
 
             var decodedSignature = Convert.FromBase64String(signature);
 

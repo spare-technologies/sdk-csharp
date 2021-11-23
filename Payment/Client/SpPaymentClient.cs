@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Payment.Models.Payment.Domestic;
@@ -40,47 +42,50 @@ namespace Payment.Client
         /// Create domestic payment
         /// </summary>
         /// <param name="payment"></param>
+        /// <param name="signature"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> CreateDomesticPayment(
-            SpDomesticPayment payment)
+        public async Task<SpCreateDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment,
+            string signature,
+            CancellationToken cancellationToken = default)
         {
             using var client = GetClient();
-            var response = await client.PostAsync(GetUrl(SpEndpoints.CreateDomesticPayment), GetBody(payment));
+            client.DefaultRequestHeaders.TryAddWithoutValidation("x-signature", signature);
+            var response = await client.PostAsync(GetUrl(SpEndpoints.CreateDomesticPayment), GetBody(payment),
+                cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
-
-            return JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.Indented
-                });
+            return new SpCreateDomesticPaymentResponse
+            {
+                Signature = response.Headers.GetValues("x-signature").FirstOrDefault(),
+                PaymentResponse = JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                    await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings)
+            };
         }
 
         /// <summary>
         /// Get domestic payment
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<SpareSdkResponse<SpDomesticPaymentResponse, object>> GetDomesticPayment(string id)
+        public async Task<SpSpareSdkResponse<SpDomesticPaymentResponse, object>> GetDomesticPayment(string id,
+            CancellationToken cancellationToken = default)
         {
             using var client = GetClient();
-            var response = await client.GetAsync($"{GetUrl(SpEndpoints.GetDomesticPayment)}?id={id}");
+            var response =
+                await client.GetAsync($"{GetUrl(SpEndpoints.GetDomesticPayment)}?id={id}", cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
 
-            return JsonConvert.DeserializeObject<SpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.Indented
-                });
+            return JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
         }
 
         /// <summary>
@@ -88,25 +93,23 @@ namespace Payment.Client
         /// </summary>
         /// <param name="start"></param>
         /// <param name="perPage"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>> ListDomesticPayments(
-            int start = 0, int perPage = 100)
+        public async Task<SpSpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>> ListDomesticPayments(
+            int start = 0, int perPage = 100, CancellationToken cancellationToken = default)
         {
             using var client = GetClient();
             var response =
-                await client.GetAsync($"{GetUrl(SpEndpoints.ListDomesticPayments)}?start={start}&perPage={perPage}");
+                await client.GetAsync($"{GetUrl(SpEndpoints.ListDomesticPayments)}?start={start}&perPage={perPage}",
+                    cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
 
-            return JsonConvert.DeserializeObject<SpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
-                await response.Content.ReadAsStringAsync(), new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    Formatting = Formatting.Indented
-                });
+            return JsonConvert.DeserializeObject<SpSpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
+                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
         }
 
         /// <summary>
