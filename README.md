@@ -5,7 +5,7 @@
 1- Download nuget package
 
 ```xml
-<PackageReference Include="" Version="1.0.0" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.0.0" />
 ``` 
 
 2- In the ConfigureServices method of Startup.cs, register the SpPaymentClient..
