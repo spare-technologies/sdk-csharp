@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Securi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{59518CE5-8EC6-4B5C-A275-1F1E572A8527}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment", "Payment\Payment.csproj", "{E24B4523-0B31-442D-93D8-857A1855D63A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spare.NET.Sdk", "Spare.NET.Sdk\Spare.NET.Sdk.csproj", "{E24B4523-0B31-442D-93D8-857A1855D63A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentClientTest", "PaymentClientTest\PaymentClientTest.csproj", "{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}"
 EndProject
@@ -30,6 +30,10 @@ Global
 		{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}.Release|x64.Build.0 = Release|Any CPU
 		{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}.Release|x86.ActiveCfg = Release|Any CPU
 		{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}.Release|x86.Build.0 = Release|Any CPU
+		{E24B4523-0B31-442D-93D8-857A1855D63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E24B4523-0B31-442D-93D8-857A1855D63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023CAFA5-AB51-41D7-AD6B-45E760B2B4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023CAFA5-AB51-41D7-AD6B-45E760B2B4E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{023CAFA5-AB51-41D7-AD6B-45E760B2B4E8} = {F9E9BCD8-3E04-42F4-9F9D-6AA71C28FDC1}

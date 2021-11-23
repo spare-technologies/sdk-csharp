@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Payment.Models.Payment.Account
+namespace Spare.NET.Sdk.Models.Payment.Account
 {
     public sealed class SpUserAccount
     {

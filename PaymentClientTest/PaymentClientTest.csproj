@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Payment\Payment.csproj" />
+      <ProjectReference Include="..\Spare.NET.Sdk\Spare.NET.Sdk.csproj" />
     </ItemGroup>
 
 </Project>

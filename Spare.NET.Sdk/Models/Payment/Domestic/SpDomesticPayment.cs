@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Payment.Models.Payment.Domestic
+namespace Spare.NET.Sdk.Models.Payment.Domestic
 {
     public class SpDomesticPayment
     {

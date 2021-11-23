@@ -2,6 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>Spare.NET.Sdk</PackageId>
+        <Title>Spare.NET.Sdk</Title>
+        <Authors>Hasni Mehdi</Authors>
+        <Copyright>Spare Technologies Co.</Copyright>
     </PropertyGroup>
 
     <ItemGroup>

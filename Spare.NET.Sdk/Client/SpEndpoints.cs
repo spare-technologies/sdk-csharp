@@ -1,4 +1,4 @@
-namespace Payment.Client
+namespace Spare.NET.Sdk.Client
 {
     public sealed class SpEndpoints
     {

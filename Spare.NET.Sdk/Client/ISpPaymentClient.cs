@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Payment.Models.Payment.Domestic;
-using Payment.Models.Response;
+using Spare.NET.Sdk.Models.Payment.Domestic;
+using Spare.NET.Sdk.Models.Response;
 
-namespace Payment.Client
+namespace Spare.NET.Sdk.Client
 {
     public interface ISpPaymentClient
     {

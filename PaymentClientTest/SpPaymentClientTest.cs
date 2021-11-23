@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Payment.Client;
-using Payment.Models.Payment.Domestic;
+using Spare.NET.Sdk.Client;
+using Spare.NET.Sdk.Models.Payment.Domestic;
 using Security;
 using Security.DigitalSignature;
 
@@ -54,7 +54,7 @@ namespace PaymentClientTest
             var payment = new SpDomesticPayment
             {
                 Amount = 10m,
-                Description = "Payment test"
+                Description = "Spare.NET.Sdk test"
             };
 
             try

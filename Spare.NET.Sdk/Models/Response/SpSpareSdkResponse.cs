@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Payment.Models.Response
+namespace Spare.NET.Sdk.Models.Response
 {
     public class SpSpareSdkResponse<T,TV>
     {

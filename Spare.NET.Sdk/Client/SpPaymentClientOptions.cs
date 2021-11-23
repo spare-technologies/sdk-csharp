@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Security.Serialization;
 
-namespace Payment.Client
+namespace Spare.NET.Sdk.Client
 {
     public class SpPaymentClientOptions
     {

@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using Payment.Models.Response;
+using Spare.NET.Sdk.Models.Response;
 
-namespace Payment.Models.Payment.Domestic
+namespace Spare.NET.Sdk.Models.Payment.Domestic
 {
     public class SpCreateDomesticPaymentResponse
     {

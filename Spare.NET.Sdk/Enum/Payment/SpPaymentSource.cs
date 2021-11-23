@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Payment.Enum.Payment
+namespace Spare.NET.Sdk.Enum.Payment
 {
     public enum SpPaymentSource
     {

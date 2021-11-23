@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Payment.Models.Payment.Domestic;
-using Payment.Models.Response;
+using Spare.NET.Sdk.Models.Payment.Domestic;
+using Spare.NET.Sdk.Models.Response;
 
-namespace Payment.Client
+namespace Spare.NET.Sdk.Client
 {
     public sealed class SpPaymentClient : ISpPaymentClient
     {

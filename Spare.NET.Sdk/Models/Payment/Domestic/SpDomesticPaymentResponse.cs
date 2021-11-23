@@ -1,9 +1,9 @@
 using System;
 using Newtonsoft.Json;
-using Payment.Enum.Payment;
-using Payment.Models.Payment.Account;
+using Spare.NET.Sdk.Enum.Payment;
+using Spare.NET.Sdk.Models.Payment.Account;
 
-namespace Payment.Models.Payment.Domestic
+namespace Spare.NET.Sdk.Models.Payment.Domestic
 {
     public sealed class SpDomesticPaymentResponse: SpDomesticPayment
     {

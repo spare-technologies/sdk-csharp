@@ -1,8 +1,8 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Payment.Client;
+using Spare.NET.Sdk.Client;
 
-namespace Payment
+namespace Spare.NET.Sdk
 {
     public static class SpDomesticPaymentClientExtension
     {
