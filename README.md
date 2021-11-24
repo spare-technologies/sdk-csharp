@@ -29,8 +29,10 @@ public class TestController : Controller
     {
         private readonly ISpPaymentClient _client_;
 
+        // Business ECC private key
         private readonly PrivateKey = "Your ecc private key";
 
+        // Spare ECC public key
         private readonly ServerPublicKey = "Server ecc public key";
 
         public TestController(ISpPaymentClient client)
@@ -41,16 +43,20 @@ public class TestController : Controller
         // GET
         public async Task<IActionResult> Index()
         {
+            // Initialize payment
              var payment = new SpDomesticPayment
             {
                 Amount = 10m,
                 Description = "Payment description"
             };
 
-            var createPayment =  await _paymentClient.CreateDomesticPayment(payment,SpEccSignatureManager.Sign(payment, PrivateKey));
+            // Sign the payment
+            var signature = SpEccSignatureManager.Sign(payment, PrivateKey);
+
+            // Create payment
+            var createPayment =  await _paymentClient.CreateDomesticPayment(payment,signature);
 
            // To verify signature of the created payment 
-
            if(SpEccSignatureManager.Verify(createPayment.PaymentResponse, createPayment.Signature, ServerPublicKey)){
                // signature verified
            }
