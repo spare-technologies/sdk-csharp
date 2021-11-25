@@ -20,6 +20,6 @@ namespace Security
                 Converters = new List<JsonConverter> {new SpDecimalToStringJsonConverter(), new StringEnumConverter()}
             });
 
-        public static byte[] GetJsonBytes(this object o) => Encoding.ASCII.GetBytes(o.ToJsonString());
+        public static byte[] GetJsonBytes(this object o) => Encoding.UTF8.GetBytes(o.ToJsonString());
     }
 }

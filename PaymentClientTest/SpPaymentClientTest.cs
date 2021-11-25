@@ -64,12 +64,11 @@ namespace PaymentClientTest
                         SpEccSignatureManager.Sign(payment, PrivateKey));
 
                 Assert.IsNotNull(paymentResponse);
-                Assert.IsTrue(string.IsNullOrWhiteSpace(paymentResponse.PaymentResponse.Error));
-                Assert.AreEqual(payment.Amount, paymentResponse.PaymentResponse.Data.Amount);
-                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.PaymentResponse.Data.Link));
-                Assert.IsTrue(SpEccSignatureManager.Verify(paymentResponse.PaymentResponse, paymentResponse.Signature,
+                Assert.AreEqual(payment.Amount, paymentResponse.Payment.Amount);
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Link));
+                Assert.IsTrue(SpEccSignatureManager.Verify(paymentResponse.Payment, paymentResponse.Signature,
                     ServerPublicKey));
-                Trace.WriteLine(paymentResponse.PaymentResponse.ToJsonString());
+                Trace.WriteLine(paymentResponse.Payment.ToJsonString());
             }
             catch (Exception e)
             {

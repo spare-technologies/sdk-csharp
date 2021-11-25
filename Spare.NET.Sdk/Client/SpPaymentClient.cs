@@ -58,11 +58,13 @@ namespace Spare.NET.Sdk.Client
                 throw new Exception(await response.Content.ReadAsStringAsync());
             }
 
+            var responseModel = JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
+
             return new SpCreateDomesticPaymentResponse
             {
                 Signature = response.Headers.GetValues("x-signature").FirstOrDefault(),
-                PaymentResponse = JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                    await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings)
+                Payment = responseModel!.Data
             };
         }
 
