@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Security.Crypto
+namespace Spare.NET.Security.Crypto
 {
     public class SpEcKeyPair
     {

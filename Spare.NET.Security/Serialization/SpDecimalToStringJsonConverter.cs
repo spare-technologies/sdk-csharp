@@ -1,7 +1,8 @@
 using System;
 using System.Globalization;
 using Newtonsoft.Json;
-namespace Security.Serialization
+
+namespace Spare.NET.Security.Serialization
 {
     public sealed class SpDecimalToStringJsonConverter: JsonConverter
     {

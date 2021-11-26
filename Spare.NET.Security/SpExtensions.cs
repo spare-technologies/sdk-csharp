@@ -3,9 +3,9 @@ using System.Globalization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Security.Serialization;
+using Spare.NET.Security.Serialization;
 
-namespace Security
+namespace Spare.NET.Security
 {
     public static class SpExtensions
     {

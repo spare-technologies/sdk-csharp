@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spare.NET.Sdk.Client;
 using Spare.NET.Sdk.Models.Payment.Domestic;
-using Security;
-using Security.DigitalSignature;
+using Spare.NET.Security;
+using Spare.NET.Security.DigitalSignature;
 
-namespace PaymentClientTest
+namespace Spare.NET.Sdk.Test
 {
     [TestClass]
     [TestCategory("automatedTest")]

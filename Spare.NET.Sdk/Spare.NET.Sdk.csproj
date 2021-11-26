@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Security\Security.csproj" />
+      <ProjectReference Include="..\Spare.NET.Security\Spare.NET.Security.csproj" />
     </ItemGroup>
 
 </Project>

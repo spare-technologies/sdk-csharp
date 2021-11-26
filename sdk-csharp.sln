@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{F9E9BCD8-3E04-42F4-9F9D-6AA71C28FDC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{023CAFA5-AB51-41D7-AD6B-45E760B2B4E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spare.NET.Security", "Spare.NET.Security\Spare.NET.Security.csproj", "{023CAFA5-AB51-41D7-AD6B-45E760B2B4E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{59518CE5-8EC6-4B5C-A275-1F1E572A8527}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spare.NET.Sdk", "Spare.NET.Sdk\Spare.NET.Sdk.csproj", "{E24B4523-0B31-442D-93D8-857A1855D63A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentClientTest", "PaymentClientTest\PaymentClientTest.csproj", "{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spare.NET.Sdk.Test", "Spare.NET.Sdk.Test\Spare.NET.Sdk.Test.csproj", "{2BF7BAB3-721C-450C-8C86-37E83D81A4AF}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution

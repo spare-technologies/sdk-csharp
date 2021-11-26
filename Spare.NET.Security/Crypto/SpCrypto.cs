@@ -8,7 +8,7 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace Security.Crypto
+namespace Spare.NET.Security.Crypto
 {
     public static class SpCrypto
     {

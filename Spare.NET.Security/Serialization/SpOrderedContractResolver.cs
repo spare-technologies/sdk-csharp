@@ -1,7 +1,8 @@
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-namespace Security.Serialization
+
+namespace Spare.NET.Security.Serialization
 {
     public sealed class SpOrderedContractResolver : DefaultContractResolver
     {

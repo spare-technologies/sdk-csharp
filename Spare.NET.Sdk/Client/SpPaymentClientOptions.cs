@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Security.Serialization;
+using Spare.NET.Security.Serialization;
 
 namespace Spare.NET.Sdk.Client
 {

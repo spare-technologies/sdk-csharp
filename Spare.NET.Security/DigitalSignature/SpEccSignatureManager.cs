@@ -5,7 +5,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 
-namespace Security.DigitalSignature
+namespace Spare.NET.Security.DigitalSignature
 {
     public static class SpEccSignatureManager
     {
