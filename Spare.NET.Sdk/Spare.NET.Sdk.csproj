@@ -7,7 +7,7 @@
         <Title>Spare.NET.Sdk</Title>
         <Authors>Hasni Mehdi</Authors>
         <Copyright>Spare Technologies Co.</Copyright>
-        <PackageVersion>1.0.0</PackageVersion>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

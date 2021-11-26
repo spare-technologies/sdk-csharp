@@ -2,13 +2,31 @@
 
 ### Usage
 
-1- Download nuget package
+#### I- Download nuget package
 
 ```xml
-<PackageReference Include="Spare.NET.Sdk" Version="1.0.0" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.0.1" />
 ``` 
 
-2- In the ConfigureServices method of Startup.cs, register the SpPaymentClient..
+#### II- To Generate ECC key pair
+
+```csharp
+ class Program
+{
+    static void Main(string[] args)
+    {
+        var eccKeyPair = SpCrypto.GenerateKeyPair();
+            
+        Console.WriteLine($"Private key \n{eccKeyPair.PrivateKey}");
+        Console.WriteLine("\n\n");
+        Console.WriteLine($"Public key \n{eccKeyPair.PublicKey}");
+    }
+}
+```
+
+#### II- To create a domestic payment 
+
+##### 1. In the ConfigureServices method of Startup.cs, register the SpPaymentClient..
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
@@ -22,7 +40,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-3- Inject the service on the desired controller..
+##### 2. Inject the service on the desired controller..
 
 ```csharp
 public class TestController : Controller
