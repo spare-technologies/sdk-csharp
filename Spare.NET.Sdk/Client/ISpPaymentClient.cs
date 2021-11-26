@@ -15,7 +15,7 @@ namespace Spare.NET.Sdk.Client
         /// <param name="signature"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<SpCreateDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment,string signature,
+        Task<SpCreateDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment, string signature,
             CancellationToken cancellationToken = default);
 
         /// <summary>

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Spare.NET.Security</RootNamespace>
+        <PackageId>Spare.NET.Security</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
