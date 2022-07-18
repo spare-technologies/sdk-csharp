@@ -119,8 +119,6 @@ namespace Spare.NET.Sdk.Test
                         Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Reference));
                     }
                 }
-
-                Trace.WriteLine(listDomesticPayments.ToJsonString());
             }
             catch (Exception e)
             {
