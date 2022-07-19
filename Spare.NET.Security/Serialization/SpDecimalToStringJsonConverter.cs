@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace Spare.NET.Security.Serialization
 {
+    /// <summary>
+    /// Decimal to string converter
+    /// </summary>
     public sealed class SpDecimalToStringJsonConverter: JsonConverter
     {
         public override bool CanRead => false;
