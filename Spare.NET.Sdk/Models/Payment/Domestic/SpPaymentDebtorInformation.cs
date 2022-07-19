@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Spare.NET.Sdk.Enum.Payment;
 
 namespace Spare.NET.Sdk.Models.Payment.Domestic
 {
@@ -14,10 +13,7 @@ namespace Spare.NET.Sdk.Models.Payment.Domestic
         [JsonProperty("phone")]
         public string Phone { get; set; }
 
-        [JsonProperty("gender")]
-        public SpGender? Gender { get; set; }
-
-        [JsonProperty("reference")]
-        public string Reference { get; set; }
+        [JsonProperty("customerReferenceId")]
+        public string CustomerReferenceId { get; set; }
     }
 }
