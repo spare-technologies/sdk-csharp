@@ -1,10 +1,16 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Bogus;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Spare.NET.Sdk.Client;
+using Spare.NET.Sdk.Enum.Payment;
 using Spare.NET.Sdk.Models.Payment.Domestic;
+using Spare.NET.Sdk.Test.TestEnvironment.Model;
 using Spare.NET.Security;
 using Spare.NET.Security.DigitalSignature;
 
@@ -12,24 +18,14 @@ namespace Spare.NET.Sdk.Test
 {
     [TestClass]
     [TestCategory("automatedTest")]
+    [TestCategory("automatedE2ETest")]
     public class SpPaymentClientTest
     {
-        /// <summary>
-        /// Ecc private key
-        /// </summary>
-        private static string PrivateKey = @"";
-
-        /// <summary>
-        /// Ecc public key
-        /// </summary>
-        private static string PublicKey = @"";
-
-        /// <summary>
-        /// Server public key
-        /// </summary>
-        private static string ServerPublicKey = @"";
+        private readonly string _paymentIdKey = $"{nameof(SpDomesticPayment)}_paymentId";
 
         private SpPaymentClient _paymentClient;
+
+        private SpTestEnvironment _testEnvironment;
 
         /// <summary>
         /// Initialize test
@@ -37,21 +33,38 @@ namespace Spare.NET.Sdk.Test
         [TestInitialize]
         public void Init()
         {
-            _paymentClient = new SpPaymentClient(new SpPaymentClientOptions
+            LoadTestEnvironment();
+
+            var options = new SpPaymentClientOptions
             {
-                ApiKey = "",
-                AppId = "",
-                BaseUrl = new Uri("")
-            });
+                ApiKey = _testEnvironment.ApiKey,
+                AppId = _testEnvironment.AppId,
+                BaseUrl = new Uri(_testEnvironment.BaseUrl)
+            };
+
+            if (_testEnvironment.Proxy != null)
+            {
+                options.Proxy = new WebProxy
+                {
+                    Address = new Uri($"{_testEnvironment.Proxy.Host}:{_testEnvironment.Proxy.Port}"),
+                    Credentials = new NetworkCredential
+                    {
+                        UserName = _testEnvironment.Proxy.Username,
+                        Password = _testEnvironment.Proxy.Password
+                    }
+                };
+            }
+
+            _paymentClient = new SpPaymentClient(options);
         }
 
         /// <summary>
         /// Create domestic payment test
         /// </summary>
         [TestMethod]
-        public async Task CreateDomesticPaymentTest()
+        public async Task A_CreateDomesticPaymentTest()
         {
-            var payment = new SpDomesticPayment
+            var payment = new SpDomesticPaymentRequest
             {
                 Amount = 10m,
                 Description = "Spare.NET.Sdk test"
@@ -61,14 +74,117 @@ namespace Spare.NET.Sdk.Test
             {
                 var paymentResponse =
                     await _paymentClient.CreateDomesticPayment(payment,
-                        SpEccSignatureManager.Sign(payment, PrivateKey));
+                        SpEccSignatureManager.Sign(payment, _testEnvironment.EcKeypair.Private));
 
-                Assert.IsNotNull(paymentResponse);
-                Assert.AreEqual(payment.Amount, paymentResponse.Payment.Amount);
-                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Link));
+                Trace.WriteLineIf(_testEnvironment.DebugMode, paymentResponse.ToJsonString());
+
+                Assert.IsNotNull(paymentResponse, "Payment response should not be null");
+
+                Assert.AreEqual(payment.Amount, paymentResponse.Payment.Amount,
+                    "Payment response amount should be equal to payment request amount");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Link),
+                    "Payment response link should not be null");
+
                 Assert.IsTrue(SpEccSignatureManager.Verify(paymentResponse.Payment, paymentResponse.Signature,
-                    ServerPublicKey));
-                Trace.WriteLine(paymentResponse.Payment.ToJsonString());
+                    _testEnvironment.ServerPublicKey), "Payment response signature should be valid");
+
+                Environment.SetEnvironmentVariable(_paymentIdKey, paymentResponse.Payment.Id.ToString());
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.ToJsonString());
+            }
+        }
+
+        /// <summary>
+        /// Create domestic payment with customer information test
+        /// </summary>
+        [TestMethod]
+        public async Task B_CreatePaymentWithCustomerInformation()
+        {
+            var payment = new Faker<SpDomesticPaymentRequest>()
+                .Rules((faker, domesticPayment) =>
+                {
+                    domesticPayment.Amount = Math.Abs(faker.Finance.Amount());
+                    domesticPayment.Description = faker.Commerce.ProductDescription();
+                    domesticPayment.OrderId = faker.Hashids.Encode(125);
+                }).Generate();
+
+            var customerInfo = new Faker<SpPaymentDebtorInformation>().Rules((faker, information) =>
+            {
+                information.Email = faker.Person.Email;
+                information.Fullname = faker.Person.FullName;
+                information.Phone = faker.Phone.PhoneNumberFormat().Replace("-", "");
+                information.CustomerReferenceId = faker.Person.Random.Guid().ToString();
+            }).Generate();
+
+            payment.CustomerInformation = customerInfo;
+
+            var paymentResponse =
+                await _paymentClient.CreateDomesticPayment(payment,
+                    SpEccSignatureManager.Sign(payment, _testEnvironment.EcKeypair.Private));
+
+            Trace.WriteLineIf(_testEnvironment.DebugMode, paymentResponse.ToJsonString());
+
+            try
+            {
+                Assert.IsNotNull(paymentResponse, "Payment response should not be null");
+
+                Assert.IsTrue(SpEccSignatureManager.Verify(paymentResponse.Payment, paymentResponse.Signature,
+                    _testEnvironment.ServerPublicKey), "Payment response signature should be valid");
+
+                Assert.IsNotNull(paymentResponse.Payment.Id, "Payment response id should not be null");
+
+                Assert.IsNotNull(paymentResponse.Payment.Amount, "Payment response amount should not be null");
+
+                Assert.AreEqual(payment.Amount, paymentResponse.Payment.Amount,
+                    "Payment response amount should be equal to payment request amount");
+
+                Assert.IsTrue(paymentResponse.Payment.IssuedFrom == SpPaymentSource.Api,
+                    "Payment should be issued from API");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Currency),
+                    "Payment currency should not be null");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Reference),
+                    "Payment reference should not be null");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.CreatedAt),
+                    "Payment created at should not be null");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Description),
+                    "Payment response description should not be null");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.OrderId),
+                    "Payment response order id should not be null");
+
+                Assert.IsFalse(string.IsNullOrEmpty(paymentResponse.Payment.Link),
+                    "Payment response link should not be null");
+
+                Assert.IsNotNull(paymentResponse.Payment.Debtor, "Payment response debtor should not be null");
+
+                Assert.IsNotNull(paymentResponse.Payment.Debtor.Account,
+                    "Payment response debtor account should not be null");
+
+                Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.Id),
+                    "Payment response debtor id should not be null");
+
+                Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.Fullname),
+                    "Payment response debtor fullname should not be null");
+
+                Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.Email),
+                    "Payment response debtor email should not be null");
+
+                Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.Phone),
+                    "Payment response debtor phone should not be null");
+
+                Assert.IsFalse(
+                    string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.CustomerReferenceId),
+                    "Payment response debtor customer reference should not be null");
+
+
+                Environment.SetEnvironmentVariable(_paymentIdKey, paymentResponse.Payment.Id.ToString());
             }
             catch (Exception e)
             {
@@ -80,18 +196,26 @@ namespace Spare.NET.Sdk.Test
         /// Get domestic payment test
         /// </summary>
         [TestMethod]
-        public async Task GetDomesticPaymentTest()
+        public async Task C_GetDomesticPaymentTest()
         {
-            //Requested payment id
-            const string paymentId = "";
+            var paymentId = Environment.GetEnvironmentVariable(_paymentIdKey);
+
+            Assert.IsFalse(string.IsNullOrWhiteSpace(paymentId));
+
             try
             {
-                var domesticPayment = await _paymentClient.GetDomesticPayment(paymentId);
-                Assert.IsNotNull(domesticPayment);
-                Assert.IsNull(domesticPayment.Error);
-                Assert.IsNotNull(domesticPayment.Data);
-                Assert.IsFalse(string.IsNullOrWhiteSpace(domesticPayment.Data.Reference));
-                Trace.WriteLine(domesticPayment.ToJsonString());
+                var paymentResponse = await _paymentClient.GetDomesticPayment(paymentId);
+
+                Trace.WriteLineIf(_testEnvironment.DebugMode, paymentResponse.ToJsonString());
+
+                Assert.IsNotNull(paymentResponse, "Payment response should not be null");
+
+                Assert.IsNull(paymentResponse.Error, "Payment error should be null");
+
+                Assert.IsNotNull(paymentResponse.Data, "Payment data should not be null");
+
+                Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Data.Reference),
+                    "Payment reference should not be null");
             }
             catch (Exception e)
             {
@@ -103,20 +227,28 @@ namespace Spare.NET.Sdk.Test
         /// List domestic payments test
         /// </summary>
         [TestMethod]
-        public async Task ListPaymentsTest()
+        public async Task D_ListPaymentsTest()
         {
             try
             {
                 var listDomesticPayments = await _paymentClient.ListDomesticPayments();
-                Assert.IsNotNull(listDomesticPayments);
-                Assert.IsNull(listDomesticPayments.Error);
-                Assert.IsNotNull(listDomesticPayments.Data);
+
+                Trace.WriteLineIf(_testEnvironment.DebugMode, listDomesticPayments.ToJsonString());
+
+                Assert.IsNotNull(listDomesticPayments, "Domestic payments list response should not be null");
+
+                Assert.IsNull(listDomesticPayments.Error, "Domestic payments list response error should be null");
+
+                Assert.IsNotNull(listDomesticPayments.Data, "Domestic payments list response data should not be null");
+
                 if (listDomesticPayments.Data.Any())
                 {
                     foreach (var paymentResponse in listDomesticPayments.Data)
                     {
-                        Assert.IsNotNull(paymentResponse);
-                        Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Reference));
+                        Assert.IsNotNull(paymentResponse, "Payment should not be null");
+                        
+                        Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Reference),
+                            "Payment should have a reference");
                     }
                 }
             }
@@ -124,6 +256,28 @@ namespace Spare.NET.Sdk.Test
             {
                 Assert.Fail(e.ToJsonString());
             }
+        }
+
+        /// <summary>
+        /// Load configuration
+        /// </summary>
+        private void LoadTestEnvironment()
+        {
+            using var sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(),
+                "TestEnvironment/testEnvironment.json"));
+            _testEnvironment = JsonConvert.DeserializeObject<SpTestEnvironment>(sr.ReadToEnd());
+
+            Assert.IsNotNull(_testEnvironment);
+            Assert.IsNotNull(_testEnvironment.EcKeypair);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.EcKeypair.Private));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ServerPublicKey));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ApiKey));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.AppId));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.BaseUrl));
+
+            if (_testEnvironment.Proxy == null) return;
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Host));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Port));
         }
     }
 }

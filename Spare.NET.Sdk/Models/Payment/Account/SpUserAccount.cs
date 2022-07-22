@@ -2,14 +2,10 @@ using Newtonsoft.Json;
 
 namespace Spare.NET.Sdk.Models.Payment.Account
 {
-    public sealed class SpUserAccount
+    public class SpUserAccount: SpAccount
     {
-        [JsonProperty("id")] public string Id { get; set; }
-
-        [JsonProperty("identifier")] public string Identifier { get; set; }
-
-        [JsonProperty("name")] public string Name { get; set; }
-
-        [JsonProperty("picture")] public string Picture { get; set; }
+        [JsonProperty("customerReferenceId")] public string CustomerReferenceId { get; set; }
+        
+        [JsonProperty("link")] public string Link { get; set; }
     }
 }

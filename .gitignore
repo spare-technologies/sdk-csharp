@@ -13,6 +13,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 .idea
+testEnvironment.json
 Test
 # Mono auto generated files
 mono_crash.*

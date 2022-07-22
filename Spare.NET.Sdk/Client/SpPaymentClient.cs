@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Spare.NET.Sdk.Exceptions;
 using Spare.NET.Sdk.Models.Payment.Domestic;
 using Spare.NET.Sdk.Models.Response;
 
@@ -21,17 +21,17 @@ namespace Spare.NET.Sdk.Client
         {
             if (clientOptions.BaseUrl == null)
             {
-                throw new NullReferenceException(nameof(clientOptions.BaseUrl));
+                throw new SpNullReferenceException(nameof(clientOptions.BaseUrl));
             }
 
             if (string.IsNullOrWhiteSpace(clientOptions.AppId))
             {
-                throw new NullReferenceException(nameof(clientOptions.AppId));
+                throw new SpNullReferenceException(nameof(clientOptions.AppId));
             }
 
             if (string.IsNullOrWhiteSpace(clientOptions.ApiKey))
             {
-                throw new NullReferenceException(nameof(clientOptions.ApiKey));
+                throw new SpNullReferenceException(nameof(clientOptions.ApiKey));
             }
 
             _clientOptions = clientOptions;
@@ -41,31 +41,36 @@ namespace Spare.NET.Sdk.Client
         /// <summary>
         /// Create domestic payment
         /// </summary>
-        /// <param name="payment"></param>
+        /// <param name="paymentRequest"></param>
         /// <param name="signature"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<SpCreateDomesticPaymentResponse> CreateDomesticPayment(SpDomesticPayment payment,
+        public async Task<SpCreateDomesticPaymentResponse> CreateDomesticPayment(
+            SpDomesticPaymentRequest paymentRequest,
             string signature,
             CancellationToken cancellationToken = default)
         {
-            using var client = GetClient();
-            client.DefaultRequestHeaders.TryAddWithoutValidation("x-signature", signature);
-            var response = await client.PostAsync(GetUrl(SpEndpoints.CreateDomesticPayment), GetBody(payment),
-                cancellationToken);
-            if (!response.IsSuccessStatusCode)
+            using (var client = GetClient())
             {
-                throw new Exception(await response.Content.ReadAsStringAsync());
+                client.DefaultRequestHeaders.TryAddWithoutValidation("x-signature", signature);
+                var response = await client.PostAsync(GetUrl(SpEndpoints.CreateDomesticPayment),
+                    GetBody(paymentRequest),
+                    cancellationToken);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new SpClientSdkException(await response.Content.ReadAsStringAsync());
+                }
+
+                var responseModel =
+                    JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                        await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
+
+                return new SpCreateDomesticPaymentResponse
+                {
+                    Signature = response.Headers.GetValues("x-signature").FirstOrDefault(),
+                    Payment = responseModel?.Data
+                };
             }
-
-            var responseModel = JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
-
-            return new SpCreateDomesticPaymentResponse
-            {
-                Signature = response.Headers.GetValues("x-signature").FirstOrDefault(),
-                Payment = responseModel!.Data
-            };
         }
 
         /// <summary>
@@ -77,17 +82,19 @@ namespace Spare.NET.Sdk.Client
         public async Task<SpSpareSdkResponse<SpDomesticPaymentResponse, object>> GetDomesticPayment(string id,
             CancellationToken cancellationToken = default)
         {
-            using var client = GetClient();
-            var response =
-                await client.GetAsync($"{GetUrl(SpEndpoints.GetDomesticPayment)}?id={id}", cancellationToken);
-            if (!response.IsSuccessStatusCode)
+            using (var client = GetClient())
             {
-                throw new Exception(await response.Content.ReadAsStringAsync());
+                var response =
+                    await client.GetAsync($"{GetUrl(SpEndpoints.GetDomesticPayment)}?id={id}", cancellationToken);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new SpClientSdkException(await response.Content.ReadAsStringAsync());
+                }
+
+
+                return JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
+                    await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
             }
-
-
-            return JsonConvert.DeserializeObject<SpSpareSdkResponse<SpDomesticPaymentResponse, object>>(
-                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
         }
 
         /// <summary>
@@ -100,18 +107,21 @@ namespace Spare.NET.Sdk.Client
         public async Task<SpSpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>> ListDomesticPayments(
             int start = 0, int perPage = 100, CancellationToken cancellationToken = default)
         {
-            using var client = GetClient();
-            var response =
-                await client.GetAsync($"{GetUrl(SpEndpoints.ListDomesticPayments)}?start={start}&perPage={perPage}",
-                    cancellationToken);
-            if (!response.IsSuccessStatusCode)
+            using (var client = GetClient())
             {
-                throw new Exception(await response.Content.ReadAsStringAsync());
+                var response =
+                    await client.GetAsync($"{GetUrl(SpEndpoints.ListDomesticPayments)}?start={start}&perPage={perPage}",
+                        cancellationToken);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new SpClientSdkException(await response.Content.ReadAsStringAsync());
+                }
+
+
+                return JsonConvert
+                    .DeserializeObject<SpSpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
+                        await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
             }
-
-
-            return JsonConvert.DeserializeObject<SpSpareSdkResponse<IEnumerable<SpDomesticPaymentResponse>, object>>(
-                await response.Content.ReadAsStringAsync(), _clientOptions.SerializerSettings);
         }
 
         /// <summary>
@@ -128,20 +138,26 @@ namespace Spare.NET.Sdk.Client
         /// Get client
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NullReferenceException"></exception>
+        /// <exception cref="SpNullReferenceException"></exception>
         private HttpClient GetClient()
         {
             if (string.IsNullOrWhiteSpace(_clientOptions.AppId))
             {
-                throw new NullReferenceException(nameof(_clientOptions.AppId));
+                throw new SpNullReferenceException(nameof(_clientOptions.AppId));
             }
 
             if (string.IsNullOrWhiteSpace(_clientOptions.ApiKey))
             {
-                throw new NullReferenceException(nameof(_clientOptions.ApiKey));
+                throw new SpNullReferenceException(nameof(_clientOptions.ApiKey));
             }
 
             var handler = new HttpClientHandler {SslProtocols = SslProtocols.Tls12};
+
+            if (_clientOptions.Proxy != null)
+            {
+                handler.Proxy = _clientOptions.Proxy;
+            }
+
             var client = new HttpClient(handler);
             client.DefaultRequestHeaders.TryAddWithoutValidation("app-id", $"{_clientOptions.AppId}");
             client.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", $"{_clientOptions.ApiKey}");

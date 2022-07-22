@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
         <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
@@ -16,8 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Spare.NET.Sdk\Spare.NET.Sdk.csproj" />
-      <ProjectReference Include="..\Spare.NET.Security\Spare.NET.Security.csproj" />
+        <ProjectReference Include="..\Spare.NET.Sdk\Spare.NET.Sdk.csproj" />
+        <ProjectReference Include="..\Spare.NET.Security\Spare.NET.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="TestEnvironment\testEnvironment.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

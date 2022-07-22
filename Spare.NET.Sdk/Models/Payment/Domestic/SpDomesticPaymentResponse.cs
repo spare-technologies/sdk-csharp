@@ -13,7 +13,7 @@ namespace Spare.NET.Sdk.Models.Payment.Domestic
 
         [JsonProperty("currency")] public string Currency { get; set; }
 
-        [JsonProperty("issuer")] public SpUserAccount Issuer { get; set; }
+        [JsonProperty("issuer")] public SpPaymentIssuer Issuer { get; set; }
 
         [JsonProperty("issuedFrom")] public SpPaymentSource? IssuedFrom { get; set; }
 

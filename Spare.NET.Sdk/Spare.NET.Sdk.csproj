@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>Spare.NET.Sdk</PackageId>
         <Title>Spare.NET.Sdk</Title>
         <Authors>Hasni Mehdi</Authors>
         <Copyright>Spare Technologies Co.</Copyright>
         <PackageVersion>1.0.1</PackageVersion>
+        <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>

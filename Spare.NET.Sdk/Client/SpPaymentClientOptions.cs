@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Spare.NET.Security.Serialization;
@@ -14,6 +15,8 @@ namespace Spare.NET.Sdk.Client
         public string AppId { get; set; }
 
         public string ApiKey { get; set; }
+
+        public IWebProxy Proxy { get; set; } = null;
 
         public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
         {

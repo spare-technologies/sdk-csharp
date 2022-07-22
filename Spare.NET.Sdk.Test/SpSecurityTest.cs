@@ -1,4 +1,4 @@
-using System;
+using Bogus;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spare.NET.Sdk.Models.Payment.Domestic;
 using Spare.NET.Security.Crypto;
@@ -7,6 +7,8 @@ using Spare.NET.Security.DigitalSignature;
 namespace Spare.NET.Sdk.Test
 {
     [TestClass]
+    [TestCategory("automatedTest")]
+    [TestCategory("automatedUnitTest")]
     public class SpSecurityTest
     {
         /// <summary>
@@ -16,9 +18,9 @@ namespace Spare.NET.Sdk.Test
         public void A_Should_Generate_Key_Pair()
         {
             var keyPair = SpCrypto.GenerateKeyPair();
-            Assert.IsNotNull(keyPair);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(keyPair.PrivateKey));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(keyPair.PublicKey));
+            Assert.IsNotNull(keyPair, "Keypair should not be null");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(keyPair.PrivateKey), "Keypair should have private key");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(keyPair.PublicKey), "Keypair should have public key");
         }
 
         /// <summary>
@@ -27,27 +29,32 @@ namespace Spare.NET.Sdk.Test
         [TestMethod]
         public void B_Should_Sign_And_Verify_Object()
         {
-            var payment = new SpDomesticPayment
-            {
-                Amount = 10_000,
-                Description = "Unit test",
-                OrderId = Guid.NewGuid().ToString(),
-                CustomerInformation = new SpPaymentDebtorInformation
+            var payment = new Faker<SpDomesticPaymentRequest>()
+                .Rules((faker, domesticPayment) =>
                 {
-                    Email = "test@example.com",
-                    Fullname = "John Doe",
-                    Phone = "+2160000000",
-                    CustomerReferenceId = Guid.NewGuid().ToString()
-                }
-            };
+                    domesticPayment.Amount = faker.Finance.Amount(2m, 100000000m, 5);
+                    domesticPayment.Description = faker.Commerce.ProductDescription();
+                    domesticPayment.OrderId = faker.Hashids.Encode();
+                }).Generate();
+
+            var customerInfo = new Faker<SpPaymentDebtorInformation>().Rules((faker, information) =>
+            {
+                information.Email = faker.Person.Email;
+                information.Fullname = faker.Person.FullName;
+                information.Phone = faker.Phone.PhoneNumberFormat().Replace("-", "");
+                information.CustomerReferenceId = faker.Person.Random.Guid().ToString();
+            }).Generate();
+
+            payment.CustomerInformation = customerInfo;
 
             var keyPair = SpCrypto.GenerateKeyPair();
 
             var signature = SpEccSignatureManager.Sign(payment, keyPair.PrivateKey);
-            
-            Assert.IsFalse(string.IsNullOrWhiteSpace(signature));
-            
-            Assert.IsTrue(SpEccSignatureManager.Verify(payment,signature,keyPair.PublicKey));
+
+            Assert.IsFalse(string.IsNullOrWhiteSpace(signature), "Signature should not be null");
+
+            Assert.IsTrue(SpEccSignatureManager.Verify(payment, signature, keyPair.PublicKey),
+                "Signature should be valid");
         }
     }
 }

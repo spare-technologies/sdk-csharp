@@ -13,9 +13,7 @@ namespace Spare.NET.Security.Serialization
         /// <param name="memberSerialization"></param>
         /// <returns></returns>
         protected override System.Collections.Generic.IList<JsonProperty> CreateProperties(System.Type type,
-            MemberSerialization memberSerialization)
-        {
-            return base.CreateProperties(type, memberSerialization).OrderBy(p => p.PropertyName).ToList();
-        }
+            MemberSerialization memberSerialization) => base.CreateProperties(type, memberSerialization)
+            .OrderBy(p => p.PropertyName).ToList();
     }
 }

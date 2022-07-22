@@ -10,8 +10,5 @@ namespace Spare.NET.Sdk.Models.Payment.Domestic
         
         [JsonProperty("orderId")]
         public string OrderId { get; set; }
-
-        [JsonProperty("customerInformation")]
-        public SpPaymentDebtorInformation CustomerInformation { get; set; }
     }
 }

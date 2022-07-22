@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Spare.NET.Security</RootNamespace>
         <PackageId>Spare.NET.Security</PackageId>
+        <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>

@@ -35,28 +35,30 @@ namespace Spare.NET.Security.Crypto
 
             var pkcs8 = new Pkcs8Generator(privateKey);
 
-            using var pkcs8Out = new StringWriter();
-            var pemWriter = new PemWriter(pkcs8Out);
-            pemWriter.WriteObject(pkcs8.Generate());
-            pkcs8Out.Close();
-
-            var keyPairModel = new SpEcKeyPair
+            using (var pkcs8Out = new StringWriter())
             {
-                PrivateKey = pkcs8Out.ToString()
-            };
+                var pemWriter = new PemWriter(pkcs8Out);
+                pemWriter.WriteObject(pkcs8.Generate());
+                pkcs8Out.Close();
 
-            var key = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
+                var keyPairModel = new SpEcKeyPair
+                {
+                    PrivateKey = pkcs8Out.ToString()
+                };
 
-            var keyStr = Convert.ToBase64String(key,
-                Base64FormattingOptions.InsertLineBreaks);
+                var key = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
 
-            var builder = new StringBuilder($"-----BEGIN PUBLIC KEY-----\n");
-            builder.Append($"{keyStr}\n");
-            builder.Append("-----END PUBLIC KEY-----");
+                var keyStr = Convert.ToBase64String(key,
+                    Base64FormattingOptions.InsertLineBreaks);
 
-            keyPairModel.PublicKey = builder.ToString();
+                var builder = new StringBuilder($"-----BEGIN PUBLIC KEY-----\n");
+                builder.Append($"{keyStr}\n");
+                builder.Append("-----END PUBLIC KEY-----");
 
-            return keyPairModel;
+                keyPairModel.PublicKey = builder.ToString();
+
+                return keyPairModel;
+            }
         }
     }
 }
