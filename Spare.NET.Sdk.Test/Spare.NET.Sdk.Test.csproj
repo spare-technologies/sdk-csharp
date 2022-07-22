@@ -8,6 +8,12 @@
         <RootNamespace>Spare.NET.Sdk.Test</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <!-- Exclude the project from analysis -->
+        <SonarQubeExclude>true</SonarQubeExclude>
+    </PropertyGroup>
+
+
     <ItemGroup>
         <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
