@@ -9,6 +9,8 @@
         <PackageVersion>1.0.1</PackageVersion>
         <PackageIcon>spare_icon.png</PackageIcon>
         <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/spare-technologies/sdk-csharp/dev/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
     <ItemGroup>
