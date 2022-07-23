@@ -1,13 +1,15 @@
 # sdk-csharp
 
 ![Nuget](https://img.shields.io/nuget/v/Spare.NET.Sdk)
+![Test and analyse workflow](https://github.com/spare-technologies/sdk-csharp/actions/workflows/dev_build_and_analyse.yml/badge.svg)
+![Build and deploy workflow](https://github.com/spare-technologies/sdk-csharp/actions/workflows/master_build_and_deploy.yml/badge.svg)
 
 ### Usage
 
 #### I- Download nuget package
 
 ```xml
-<PackageReference Include="Spare.NET.Sdk" Version="1.2.0" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.2.1" />
 ``` 
 
 #### II- To Generate ECC key pair
