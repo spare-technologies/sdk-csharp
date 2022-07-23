@@ -19,6 +19,11 @@ namespace Spare.NET.Sdk.Client
 
         public SpPaymentClient(SpPaymentClientOptions clientOptions)
         {
+            if (clientOptions == null)
+            {
+                throw new SpNullReferenceException("Client configuration is required");
+            }
+
             if (clientOptions.BaseUrl == null)
             {
                 throw new SpNullReferenceException(nameof(clientOptions.BaseUrl));

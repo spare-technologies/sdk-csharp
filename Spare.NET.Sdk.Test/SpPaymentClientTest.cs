@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Spare.NET.Sdk.Client;
@@ -260,20 +261,10 @@ namespace Spare.NET.Sdk.Test
         }
 
         /// <summary>
-        /// Wrong sdk configuration test
-        /// </summary>
-        [TestMethod]
-        public void E_WrongSdkConfigurationTest()
-        {
-            Assert.ThrowsException<NullReferenceException>(() => { _paymentClient = new SpPaymentClient(null); },
-                "Should validate client configuration");
-        }
-
-        /// <summary>
         /// Missing payment request signature test
         /// </summary>
         [TestMethod]
-        public async Task F_MissingPaymentSignatureTest()
+        public async Task E_MissingPaymentSignatureTest()
         {
             var payment = new SpDomesticPaymentRequest
             {
@@ -281,8 +272,74 @@ namespace Spare.NET.Sdk.Test
                 Description = "Spare.NET.Sdk test"
             };
 
-            await Assert.ThrowsExceptionAsync<SpClientSdkException>(() => _paymentClient.CreateDomesticPayment(payment, ""),
+            await Assert.ThrowsExceptionAsync<SpClientSdkException>(
+                () => _paymentClient.CreateDomesticPayment(payment, ""),
                 "Should throws exception");
+        }
+
+        /// <summary>
+        /// Wrong sdk configuration test
+        /// </summary>
+        [TestMethod]
+        public void F_WrongSdkConfigurationTest()
+        {
+            Assert.ThrowsException<SpNullReferenceException>(() => { _paymentClient = new SpPaymentClient(null); },
+                "Should validate client configuration");
+        }
+
+        /// <summary>
+        /// Missing api key test
+        /// </summary>
+        [TestMethod]
+        public void G_MissingApiKeyTest()
+        {
+            Assert.ThrowsException<SpNullReferenceException>(() =>
+                {
+                    _paymentClient = new SpPaymentClient(new SpPaymentClientOptions
+                    {
+                        ApiKey = null,
+                        AppId = _testEnvironment.AppId,
+                        BaseUrl = new Uri(_testEnvironment.BaseUrl)
+                    });
+                },
+                "Should validate api key");
+        }
+
+        /// <summary>
+        /// Missing app id test
+        /// </summary>
+        [TestMethod]
+        public void H_MissingAppIdTest()
+        {
+            Assert.ThrowsException<SpNullReferenceException>(() =>
+                {
+                    _paymentClient = new SpPaymentClient(new SpPaymentClientOptions
+                    {
+                        ApiKey = _testEnvironment.ApiKey,
+                        AppId = null,
+                        BaseUrl = new Uri(_testEnvironment.BaseUrl)
+                    });
+                },
+                "Should validate app id");
+        }
+
+        /// <summary>
+        /// Sdk dependency injection test
+        /// </summary>
+        [TestMethod]
+        public void I_DependencyInjectionTest()
+        {
+            var services = new ServiceCollection();
+            services.AddSpPaymentClient(options =>
+            {
+                options.ApiKey = _testEnvironment.ApiKey;
+                options.AppId = _testEnvironment.AppId;
+                options.BaseUrl = new Uri(_testEnvironment.BaseUrl);
+            });
+
+            var provider = services.BuildServiceProvider();
+
+            Assert.IsNotNull(provider.GetService<ISpPaymentClient>(), "Should create a spare payment client instance");
         }
 
         /// <summary>
