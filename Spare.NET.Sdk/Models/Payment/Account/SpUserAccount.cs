@@ -6,6 +6,6 @@ namespace Spare.NET.Sdk.Models.Payment.Account
     {
         [JsonProperty("customerReferenceId")] public string CustomerReferenceId { get; set; }
         
-        [JsonProperty("link")] public string Link { get; set; }
+        [JsonProperty("customerPaymentLink")] public string CustomerPaymentLink { get; set; }
     }
 }
