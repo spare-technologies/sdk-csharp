@@ -4,6 +4,9 @@ on:
     types: [ opened,reopened,edited ]
     branches:
       - dev
+  push:
+    branches:
+      - dev
 
 jobs:
   test_and_analyse:
@@ -29,8 +32,8 @@ jobs:
           
       - name: Install requirements
         run: |
-          apt update  2>/dev/null
-          apt install -y wget jq zip  2>/dev/null
+          sudo apt update  2>/dev/null
+          sudo apt install -y wget jq zip  2>/dev/null
 
       - name: Install sonar scanner
         run: |
@@ -61,7 +64,7 @@ jobs:
         env:
           SCRIPT_URL: ${{ secrets.SCRIPT_URL }}
         run: |
-          wget $SCRIPT_URL 2>/dev/null && chmod 755 xml2json && cp xml2json /usr/bin
+          wget $SCRIPT_URL 2>/dev/null && chmod 755 xml2json && sudo cp xml2json /usr/bin
           mkdir -p testOutput/result && mkdir -p testOutput/coverage
           cp Spare.NET.Sdk.Test/TestResults/testResult.trx testOutput/result/
           cp -r dotCover.Output dotCover.Output.html testOutput/coverage/
