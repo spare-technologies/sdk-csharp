@@ -32,8 +32,8 @@ jobs:
           
       - name: Install requirements
         run: |
-          apt update  2>/dev/null
-          apt install -y wget jq zip  2>/dev/null
+          apt update 
+          apt install -y wget jq zip
 
       - name: Install sonar scanner
         run: |
