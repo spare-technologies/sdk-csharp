@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Spare.NET.Sdk.Exceptions
 {
     [Serializable]
-    internal sealed class SpClientSdkException : Exception
+    public sealed class SpClientSdkException : Exception
     {
         public SpClientSdkException()
         {

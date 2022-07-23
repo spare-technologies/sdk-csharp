@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Spare.NET.Sdk.Exceptions
 {
     [Serializable]
-    internal sealed class SpNullReferenceException : Exception
+    public sealed class SpNullReferenceException : Exception
     {
         public SpNullReferenceException()
         {

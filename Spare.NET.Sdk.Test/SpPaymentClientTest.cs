@@ -246,7 +246,7 @@ namespace Spare.NET.Sdk.Test
                     foreach (var paymentResponse in listDomesticPayments.Data)
                     {
                         Assert.IsNotNull(paymentResponse, "Payment should not be null");
-                        
+
                         Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Reference),
                             "Payment should have a reference");
                     }
@@ -256,6 +256,15 @@ namespace Spare.NET.Sdk.Test
             {
                 Assert.Fail(e.ToJsonString());
             }
+        }
+
+        /// <summary>
+        /// Wrong sdk configuration test
+        /// </summary>
+        [TestMethod]
+        public void E_WrongSdkConfigurationTest()
+        {
+            Assert.ThrowsException<NullReferenceException>(() => { _paymentClient = new SpPaymentClient(null); });
         }
 
         /// <summary>
