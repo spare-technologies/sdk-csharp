@@ -1,0 +1,45 @@
+name: Build and deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ 3.1.x ]
+    steps:
+      - name: Set up dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Extract version
+        run: |
+          cd Spare.NET.Sdk
+          version=$(echo $(cat Spare.NET.Sdk.csproj | grep PackageVersion | grep -E -o '[0-9.]') | sed 's/[[:blank:]][[:blank:]]*//g')
+          echo "VERSION_NAME=$version" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          cp Spare.NET.Sdk.Test/TestEnvironment/testEnvironment.scheme.json Spare.NET.Sdk.Test/TestEnvironment/testEnvironment.json
+          dotnet restore
+          dotnet build -c Release
+
+      - name: Deploy
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        run: |
+          cd Spare.NET.Sdk && dotnet restore
+          dotnet build -c Release Spare.NET.Sdk.csproj
+          dotnet nuget push bin/Release/Spare.NET.Sdk.${{ env.VERSION_NAME }}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
+          
+          
+
+
