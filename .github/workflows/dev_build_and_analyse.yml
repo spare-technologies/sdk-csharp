@@ -4,9 +4,6 @@ on:
     types: [ opened,reopened,edited ]
     branches:
       - dev
-  push:
-    branches:
-      - dev
 
 jobs:
   test_and_analyse:
