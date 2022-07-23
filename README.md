@@ -1,11 +1,13 @@
 # sdk-csharp
 
+![Nuget](https://img.shields.io/nuget/v/Spare.NET.Sdk)
+
 ### Usage
 
 #### I- Download nuget package
 
 ```xml
-<PackageReference Include="Spare.NET.Sdk" Version="1.0.1" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.2.0" />
 ``` 
 
 #### II- To Generate ECC key pair
@@ -62,7 +64,7 @@ public class TestController : Controller
         public async Task<IActionResult> Index()
         {
             // Initialize payment
-             var payment = new SpDomesticPayment
+             var payment = new SpDomesticPaymentRequest
             {
                 Amount = 10m,
                 Description = "Payment description"
