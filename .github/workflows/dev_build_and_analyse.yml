@@ -61,14 +61,21 @@ jobs:
         env:
           SCRIPT_URL: ${{ secrets.SCRIPT_URL }}
         run: |
-          wget $SCRIPT_URL
+          wget $SCRIPT_URL 2>/dev/null && chmod 755 xml2json && cp xml2json /usr/bin
           mkdir -p testOutput/result && mkdir -p testOutput/coverage
           cp Spare.NET.Sdk.Test/TestResults/testResult.trx testOutput/result/
           cp -r dotCover.Output dotCover.Output.html testOutput/coverage/
           cp Spare.NET.Sdk.Test/test_check.sh . && chmod 755 test_check.sh
-          chmod 755 xml2json && bash xml2json testOutput/result/testResult.trx && cp out.json testOutput/result/
+          xml2json testOutput/result/testResult.trx && cp out.json testOutput/result/
           bash test_check.sh
-          zip -r testOutput.zip testOutput
+          zip -r testOutput.zip testOutput 2>/dev/null
+
+      - name: Save test outputs
+        uses: actions/upload-artifact@v2
+        with:
+          name: testOutput
+          path: testOutput.zip
+          retention-days: 30
           
           
 
