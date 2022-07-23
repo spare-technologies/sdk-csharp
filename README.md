@@ -9,7 +9,7 @@
 #### I- Download nuget package
 
 ```xml
-<PackageReference Include="Spare.NET.Sdk" Version="1.2.1" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.2.2" />
 ``` 
 
 #### II- To Generate ECC key pair
