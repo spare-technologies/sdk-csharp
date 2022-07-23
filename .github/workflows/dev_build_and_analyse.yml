@@ -26,6 +26,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          
+      - name: Install requirements
+        run: |
+          apt update  2>/dev/null
+          apt install -y wget jq zip  2>/dev/null
 
       - name: Install sonar scanner
         run: |
@@ -51,3 +56,20 @@ jobs:
           dotnet sonarscanner begin /k:"CSharp-SDK" /d:sonar.host.url="$SONAR_HOST_URL"  /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html
           dotnet dotcover test -l:"console;verbosity=normal" --logger "trx;logfilename=testResult.trx"  --no-restore --filter "TestCategory=AutomatedTest" --dcReportType=HTML
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          
+      - name: Validate test
+        env:
+          SCRIPT_URL: ${{ secrets.SCRIPT_URL }}
+        run: |
+          wget $SCRIPT_URL
+          mkdir -p testOutput/result && mkdir -p testOutput/coverage
+          cp Spare.NET.Sdk.Test/TestResults/testResult.trx testOutput/result/
+          cp -r dotCover.Output dotCover.Output.html testOutput/coverage/
+          cp Spare.NET.Sdk.Test/test_check.sh . && chmod 755 test_check.sh
+          chmod 755 xml2json && bash xml2json testOutput/result/testResult.trx && cp out.json testOutput/result/
+          bash test_check.sh
+          zip -r testOutput.zip testOutput
+          
+          
+
+

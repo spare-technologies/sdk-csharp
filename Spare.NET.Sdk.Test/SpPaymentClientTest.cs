@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Spare.NET.Sdk.Client;
 using Spare.NET.Sdk.Enum.Payment;
+using Spare.NET.Sdk.Exceptions;
 using Spare.NET.Sdk.Models.Payment.Domestic;
 using Spare.NET.Sdk.Test.TestEnvironment.Model;
 using Spare.NET.Security;
@@ -264,7 +265,24 @@ namespace Spare.NET.Sdk.Test
         [TestMethod]
         public void E_WrongSdkConfigurationTest()
         {
-            Assert.ThrowsException<NullReferenceException>(() => { _paymentClient = new SpPaymentClient(null); });
+            Assert.ThrowsException<NullReferenceException>(() => { _paymentClient = new SpPaymentClient(null); },
+                "Should validate client configuration");
+        }
+
+        /// <summary>
+        /// Missing payment request signature test
+        /// </summary>
+        [TestMethod]
+        public async Task F_MissingPaymentSignatureTest()
+        {
+            var payment = new SpDomesticPaymentRequest
+            {
+                Amount = 10m,
+                Description = "Spare.NET.Sdk test"
+            };
+
+            await Assert.ThrowsExceptionAsync<SpClientSdkException>(() => _paymentClient.CreateDomesticPayment(payment, ""),
+                "Should throws exception");
         }
 
         /// <summary>
