@@ -29,8 +29,8 @@ jobs:
           
       - name: Install requirements
         run: |
-          sudo apt update  2>/dev/null
-          sudo apt install -y wget jq zip  2>/dev/null
+          sudo apt update  &>/dev/null
+          sudo apt install -y wget jq zip  &>/dev/null
 
       - name: Install sonar scanner
         run: |
@@ -61,14 +61,14 @@ jobs:
         env:
           SCRIPT_URL: ${{ secrets.SCRIPT_URL }}
         run: |
-          wget $SCRIPT_URL 2>/dev/null && chmod 755 xml2json && sudo cp xml2json /usr/bin
+          wget $SCRIPT_URL &>/dev/null && chmod 755 xml2json && sudo cp xml2json /usr/bin
           mkdir -p testOutput/result && mkdir -p testOutput/coverage
           cp Spare.NET.Sdk.Test/TestResults/testResult.trx testOutput/result/
           cp -r dotCover.Output dotCover.Output.html testOutput/coverage/
           cp Spare.NET.Sdk.Test/test_check.sh . && chmod 755 test_check.sh
           xml2json testOutput/result/testResult.trx && cp out.json testOutput/result/
           bash test_check.sh
-          zip -r testOutput.zip testOutput 2>/dev/null
+          zip -r testOutput.zip testOutput &>/dev/null
 
       - name: Save test outputs
         uses: actions/upload-artifact@v2

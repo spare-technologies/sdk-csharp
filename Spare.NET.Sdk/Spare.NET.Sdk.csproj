@@ -10,6 +10,7 @@
         <PackageIcon>spare_icon.png</PackageIcon>
         <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageTags>payment;openbanking;fintech;payment-gateway;webpaymentapi;openbanking-api;fintech-api</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
