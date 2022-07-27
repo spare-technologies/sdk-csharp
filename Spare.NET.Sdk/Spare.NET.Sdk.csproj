@@ -10,11 +10,13 @@
         <PackageIcon>spare_icon.png</PackageIcon>
         <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README_.md</PackageReadmeFile>
         <PackageTags>payment;openbanking;fintech;payment-gateway;webpaymentapi;openbanking-api;fintech-api</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="README_.md" Pack="true" PackagePath="\" />
         <None Include="LICENSE" Pack="true" PackagePath="\" />
         <None Include="spare_icon.png" Pack="true" PackagePath="\" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
