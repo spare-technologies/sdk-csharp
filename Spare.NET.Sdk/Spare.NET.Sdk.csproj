@@ -6,7 +6,7 @@
         <Title>Spare.NET.Sdk</Title>
         <Authors>Hasni Mehdi</Authors>
         <Copyright>Spare Technologies Co.</Copyright>
-        <PackageVersion>1.2.3</PackageVersion>
+        <PackageVersion>1.2.4</PackageVersion>
         <PackageIcon>spare_icon.png</PackageIcon>
         <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
