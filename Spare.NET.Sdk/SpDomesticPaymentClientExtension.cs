@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Spare.NET.Sdk.Client;
 using Spare.NET.Sdk.Exceptions;
 
@@ -7,7 +6,7 @@ namespace Spare.NET.Sdk
 {
     public static class SpDomesticPaymentClientExtension
     {
-        /// <summary>
+        /*/// <summary>
         /// Inject SpPaymentClient
         /// </summary>
         /// <param name="services"></param>
@@ -41,6 +40,6 @@ namespace Spare.NET.Sdk
             }
 
             return services.AddTransient<ISpPaymentClient, SpPaymentClient>(provider => new SpPaymentClient(options));
-        }
+        }*/
     }
 }

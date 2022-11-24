@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Spare.NET.Sdk.Client;
@@ -324,44 +323,27 @@ namespace Spare.NET.Sdk.Test
         }
 
         /// <summary>
-        /// Sdk dependency injection test
-        /// </summary>
-        [TestMethod]
-        public void I_DependencyInjectionTest()
-        {
-            var services = new ServiceCollection();
-            services.AddSpPaymentClient(options =>
-            {
-                options.ApiKey = _testEnvironment.ApiKey;
-                options.AppId = _testEnvironment.AppId;
-                options.BaseUrl = new Uri(_testEnvironment.BaseUrl);
-            });
-
-            var provider = services.BuildServiceProvider();
-
-            Assert.IsNotNull(provider.GetService<ISpPaymentClient>(), "Should create a spare payment client instance");
-        }
-
-        /// <summary>
         /// Load configuration
         /// </summary>
         private void LoadTestEnvironment()
         {
-            using var sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(),
-                "TestEnvironment/testEnvironment.json"));
-            _testEnvironment = JsonConvert.DeserializeObject<SpTestEnvironment>(sr.ReadToEnd());
+            using (var sr = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(),
+                       "TestEnvironment/testEnvironment.json")))
+            {
+                _testEnvironment = JsonConvert.DeserializeObject<SpTestEnvironment>(sr.ReadToEnd());
 
-            Assert.IsNotNull(_testEnvironment);
-            Assert.IsNotNull(_testEnvironment.EcKeypair);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.EcKeypair.Private));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ServerPublicKey));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ApiKey));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.AppId));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.BaseUrl));
+                Assert.IsNotNull(_testEnvironment);
+                Assert.IsNotNull(_testEnvironment.EcKeypair);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.EcKeypair.Private));
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ServerPublicKey));
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.ApiKey));
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.AppId));
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.BaseUrl));
 
-            if (_testEnvironment.Proxy == null) return;
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Host));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Port));
+                if (_testEnvironment.Proxy == null) return;
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Host));
+                Assert.IsFalse(string.IsNullOrWhiteSpace(_testEnvironment.Proxy.Port));
+            }
         }
     }
 }

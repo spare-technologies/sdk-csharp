@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Authentication;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -156,7 +155,7 @@ namespace Spare.NET.Sdk.Client
                 throw new SpNullReferenceException(nameof(_clientOptions.ApiKey));
             }
 
-            var handler = new HttpClientHandler {SslProtocols = SslProtocols.Tls12};
+            var handler = new HttpClientHandler();
 
             if (_clientOptions.Proxy != null)
             {

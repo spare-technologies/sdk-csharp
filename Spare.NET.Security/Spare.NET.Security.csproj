@@ -3,12 +3,14 @@
     <PropertyGroup>
         <RootNamespace>Spare.NET.Security</RootNamespace>
         <PackageId>Spare.NET.Security</PackageId>
-        <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net6.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BouncyCastle.NetCore" Version="1.8.8" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="BouncyCastle" Version="1.8.9">
+            <NoWarn>NU1701</NoWarn>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
     </ItemGroup>
 
 </Project>
