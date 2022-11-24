@@ -5,7 +5,7 @@
 #### I- Download nuget package
 
 ```xml
-<PackageReference Include="Spare.NET.Sdk" Version="1.2.2" />
+<PackageReference Include="Spare.NET.Sdk" Version="1.3.0" />
 ``` 
 
 #### II- To Generate ECC key pair
@@ -24,23 +24,7 @@
 }
 ```
 
-#### II- To create a domestic payment 
-
-##### 1. In the ConfigureServices method of Startup.cs, register the SpPaymentClient..
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSpPaymentClient(options =>
-    {
-        options.ApiKey = "Your API key";
-        options.AppId = "Your app id";
-        options.BaseUrl = new Uri("https://payment.tryspare.com");
-    });
-}
-```
-
-##### 2. Inject the service on the desired controller..
+#### II- To create a domestic payment
 
 ```csharp
 public class TestController : Controller
@@ -53,9 +37,16 @@ public class TestController : Controller
         // Spare ECC public key
         private readonly ServerPublicKey = "Server ecc public key";
 
-        public TestController(ISpPaymentClient client)
+        public TestController()
         {
-            _client = client;
+            var options = new SpPaymentClientOptions
+            {
+                ApiKey = "Your API key",
+                AppId = "Your app id",
+                BaseUrl = new Uri("https://payment.tryspare.com");
+            };
+            
+            _client = new SpPaymentClient(options);
         }
         
         // GET
