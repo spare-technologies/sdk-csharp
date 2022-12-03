@@ -184,6 +184,7 @@ namespace Spare.NET.Sdk.Test
                     string.IsNullOrWhiteSpace(paymentResponse.Payment.Debtor.Account.CustomerReferenceId),
                     "Payment response debtor customer reference should not be null");
 
+                Assert.IsNotNull(paymentResponse.Payment.Status, "Payment status should not be null");
 
                 Environment.SetEnvironmentVariable(_paymentIdKey, paymentResponse.Payment.Id.ToString());
             }
@@ -214,6 +215,8 @@ namespace Spare.NET.Sdk.Test
                 Assert.IsNull(paymentResponse.Error, "Payment error should be null");
 
                 Assert.IsNotNull(paymentResponse.Data, "Payment data should not be null");
+                
+                Assert.IsNotNull(paymentResponse.Data.Status, "Payment status should not be null");
 
                 Assert.IsFalse(string.IsNullOrWhiteSpace(paymentResponse.Data.Reference),
                     "Payment reference should not be null");

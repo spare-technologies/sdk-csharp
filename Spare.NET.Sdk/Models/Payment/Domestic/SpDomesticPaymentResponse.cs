@@ -21,6 +21,8 @@ namespace Spare.NET.Sdk.Models.Payment.Domestic
 
         [JsonProperty("link")] public string Link { get; set; }
 
+        [JsonProperty("status")] public SpPaymentStatus Status { get; set; }
+
         [JsonProperty("createdAt")] public string CreatedAt { get; set; }
     }
 }
